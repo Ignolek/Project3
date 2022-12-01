@@ -43,8 +43,8 @@ void AProject3Character::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 	
-	FirstPersonCameraComponent->AttachToComponent(FirstPersonSkeletalMeshComponent, FAttachmentTransformRules::KeepRelativeTransform, TEXT("head"));
-	FirstPersonCameraComponent->SetRelativeLocation(FVector(0.0f, 30.0f, 0.0f)); // Position the camera
+	FirstPersonCameraComponent->AttachToComponent(FirstPersonSkeletalMeshComponent, FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("head"));
+	FirstPersonCameraComponent->SetRelativeLocation(FVector(0.0f, 20.0f, 0.0f)); // Position the camera
 }
 
 void AProject3Character::Tick(float DeltaTime)
