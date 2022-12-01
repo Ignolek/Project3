@@ -33,6 +33,7 @@ AProject3Character::AProject3Character()
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
 	FirstPersonCameraComponent->bEditableWhenInherited = true;
 
+
 	//CrouchEyeOffset = FVector(0.0f);
 	//CrouchSpeed = 11.0f;
 }
@@ -42,6 +43,7 @@ void AProject3Character::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 	
+	FirstPersonCameraComponent->AttachToComponent(FirstPersonSkeletalMeshComponent, FAttachmentTransformRules::KeepRelativeTransform, TEXT("head"));
 }
 
 void AProject3Character::Tick(float DeltaTime)
