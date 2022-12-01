@@ -43,7 +43,7 @@ void AProject3Character::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 	
-	FirstPersonCameraComponent->AttachToComponent(FirstPersonSkeletalMeshComponent, FAttachmentTransformRules::KeepRelativeTransform, TEXT("head"));
+	FirstPersonCameraComponent->AttachToComponent(FirstPersonSkeletalMeshComponent, FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("head"));
 }
 
 void AProject3Character::Tick(float DeltaTime)
