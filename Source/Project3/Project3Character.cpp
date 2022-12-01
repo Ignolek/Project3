@@ -1,7 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "Project3Character.h"
-#include "Project3Projectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -13,6 +12,8 @@
 // AProject3Character
 
 AProject3Character::AProject3Character()
+	: CrouchEyeOffset(FVector(0.0f))
+	, CrouchSpeed(11.0f)
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
@@ -26,22 +27,23 @@ AProject3Character::AProject3Character()
 	FirstPersonCameraComponent->SetRelativeLocation(FVector(-39.56f, 1.75f, 64.f)); // Position the camera
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
 
-	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
-	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
-	Mesh1P->SetOnlyOwnerSee(true);
-	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
-	Mesh1P->bCastDynamicShadow = false;
-	Mesh1P->CastShadow = false;
-	Mesh1P->SetRelativeRotation(FRotator(1.9f, -19.19f, 5.2f));
-	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
-
+	//CrouchEyeOffset = FVector(0.0f);
+	//CrouchSpeed = 11.0f;
 }
 
 void AProject3Character::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+	
+}
 
+void AProject3Character::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	float CrouchInterpTime = FMath::Min(1.f, CrouchSpeed * DeltaTime);
+	CrouchEyeOffset = (1.f - CrouchInterpTime) * CrouchEyeOffset;
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -150,22 +152,35 @@ bool AProject3Character::EnableTouchscreenMovement(class UInputComponent* Player
 
 void AProject3Character::OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
 {
-	//RecalculateBaseEyeHeight();
+	if (HalfHeightAdjust == 0.0f)
+	{
+		return;
+	}
 
-	////Super::OnStartCrouch(HalfHeightAdjust, ScaledHalfHeightAdjust);
+	float StartBaseEyeHeight = BaseEyeHeight;
+	Super::OnStartCrouch(HalfHeightAdjust, ScaledHalfHeightAdjust);
+	CrouchEyeOffset.Z += StartBaseEyeHeight - BaseEyeHeight + HalfHeightAdjust;
+	FirstPersonCameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, BaseEyeHeight), false);
+}
 
-	//const ACharacter* DefaultChar = GetDefault<ACharacter>(GetClass());
-	//if (GetMesh() && DefaultChar->GetMesh())
-	//{
-	//	FVector& MeshRelativeLocation = GetMesh()->GetRelativeLocation_DirectMutable();
-	//	MeshRelativeLocation.Z = DefaultChar->GetMesh()->GetRelativeLocation().Z + HalfHeightAdjust;
-	//	BaseTranslationOffset.Z = MeshRelativeLocation.Z;
-	//}
-	//else
-	//{
-	//	BaseTranslationOffset.Z = DefaultChar->GetBaseTranslationOffset().Z + HalfHeightAdjust;
-	//}
+void AProject3Character::OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
+{
+	if (HalfHeightAdjust == 0.0f)
+	{
+		return;
+	}
 
-	//K2_OnStartCrouch(HalfHeightAdjust, ScaledHalfHeightAdjust);
+	float StartBaseEyeHeight = BaseEyeHeight;
+	Super::OnEndCrouch(HalfHeightAdjust, ScaledHalfHeightAdjust);
+	CrouchEyeOffset.Z += StartBaseEyeHeight - BaseEyeHeight - HalfHeightAdjust;
+	FirstPersonCameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, BaseEyeHeight), false);
+}
 
+void AProject3Character::CalcCamera(float DeltaTime, FMinimalViewInfo& OutResult)
+{
+	if (FirstPersonCameraComponent)
+	{
+		FirstPersonCameraComponent->GetCameraView(DeltaTime, OutResult);
+		OutResult.Location += CrouchEyeOffset;
+	}
 }
