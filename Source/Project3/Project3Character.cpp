@@ -20,12 +20,18 @@ AProject3Character::AProject3Character()
 
 	// set our turn rates for input
 	TurnRateGamepad = 45.f;
+	// Create Seletal Mesh
+	FirstPersonSkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
+	FirstPersonSkeletalMeshComponent->SetupAttachment(GetCapsuleComponent());
+	FirstPersonSkeletalMeshComponent->SetRelativeLocation(FVector(0.f, 0.f, 0.f));
+	FirstPersonSkeletalMeshComponent->bEditableWhenInherited = true;
 
 	// Create a CameraComponent	
 	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
-	FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
+	FirstPersonCameraComponent->SetupAttachment(FirstPersonSkeletalMeshComponent);
 	FirstPersonCameraComponent->SetRelativeLocation(FVector(-39.56f, 1.75f, 64.f)); // Position the camera
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
+	FirstPersonCameraComponent->bEditableWhenInherited = true;
 
 	//CrouchEyeOffset = FVector(0.0f);
 	//CrouchSpeed = 11.0f;

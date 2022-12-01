@@ -21,6 +21,9 @@ UCLASS(config=Game)
 class AProject3Character : public ACharacter
 {
 	GENERATED_BODY()
+	/** Skeletal Mesh */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = SkeletalMesh, meta = (AllowPrivateAccess = "true"))
+	USkeletalMeshComponent* FirstPersonSkeletalMeshComponent;
 
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
