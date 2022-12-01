@@ -29,7 +29,7 @@ AProject3Character::AProject3Character()
 	// Create a CameraComponent	
 	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FirstPersonCameraComponent->SetupAttachment(FirstPersonSkeletalMeshComponent);
-	FirstPersonCameraComponent->SetRelativeLocation(FVector(-39.56f, 1.75f, 64.f)); // Position the camera
+	
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
 	FirstPersonCameraComponent->bEditableWhenInherited = true;
 
@@ -43,7 +43,8 @@ void AProject3Character::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 	
-	FirstPersonCameraComponent->AttachToComponent(FirstPersonSkeletalMeshComponent, FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("head"));
+	FirstPersonCameraComponent->AttachToComponent(FirstPersonSkeletalMeshComponent, FAttachmentTransformRules::KeepRelativeTransform, TEXT("head"));
+	FirstPersonCameraComponent->SetRelativeLocation(FVector(0.0f, 30.0f, 0.0f)); // Position the camera
 }
 
 void AProject3Character::Tick(float DeltaTime)
@@ -168,7 +169,6 @@ void AProject3Character::OnStartCrouch(float HalfHeightAdjust, float ScaledHalfH
 	float StartBaseEyeHeight = BaseEyeHeight;
 	Super::OnStartCrouch(HalfHeightAdjust, ScaledHalfHeightAdjust);
 	CrouchEyeOffset.Z += StartBaseEyeHeight - BaseEyeHeight + HalfHeightAdjust;
-	FirstPersonCameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, BaseEyeHeight), false);
 }
 
 void AProject3Character::OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
@@ -181,7 +181,6 @@ void AProject3Character::OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHei
 	float StartBaseEyeHeight = BaseEyeHeight;
 	Super::OnEndCrouch(HalfHeightAdjust, ScaledHalfHeightAdjust);
 	CrouchEyeOffset.Z += StartBaseEyeHeight - BaseEyeHeight - HalfHeightAdjust;
-	FirstPersonCameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, BaseEyeHeight), false);
 }
 
 void AProject3Character::CalcCamera(float DeltaTime, FMinimalViewInfo& OutResult)

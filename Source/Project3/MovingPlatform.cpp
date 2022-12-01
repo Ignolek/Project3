@@ -49,8 +49,6 @@ void AMovingPlatform::Tick(float DeltaTime)
 		}
 	}
 
-
-
 	this->SetActorLocation(NewTargetLocation, true);
 	
 }
