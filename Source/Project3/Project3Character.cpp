@@ -147,3 +147,25 @@ bool AProject3Character::EnableTouchscreenMovement(class UInputComponent* Player
 	
 	return false;
 }
+
+void AProject3Character::OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
+{
+	//RecalculateBaseEyeHeight();
+
+	////Super::OnStartCrouch(HalfHeightAdjust, ScaledHalfHeightAdjust);
+
+	//const ACharacter* DefaultChar = GetDefault<ACharacter>(GetClass());
+	//if (GetMesh() && DefaultChar->GetMesh())
+	//{
+	//	FVector& MeshRelativeLocation = GetMesh()->GetRelativeLocation_DirectMutable();
+	//	MeshRelativeLocation.Z = DefaultChar->GetMesh()->GetRelativeLocation().Z + HalfHeightAdjust;
+	//	BaseTranslationOffset.Z = MeshRelativeLocation.Z;
+	//}
+	//else
+	//{
+	//	BaseTranslationOffset.Z = DefaultChar->GetBaseTranslationOffset().Z + HalfHeightAdjust;
+	//}
+
+	//K2_OnStartCrouch(HalfHeightAdjust, ScaledHalfHeightAdjust);
+
+}
